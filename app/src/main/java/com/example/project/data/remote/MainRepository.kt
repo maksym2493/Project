@@ -32,7 +32,7 @@ object MainRepository{
         var response = localDB.getRecipes(count)
         while(response.size < count && times++ != 5){
             try {
-                var recipes = apiInterface.getRecipes(count - response.size).body()!!.recipes
+                var recipes = apiInterface.getRecipes(count).body()!!.recipes
 
                 recipes.forEach {
                     if (it.image != null && it.instructions != "") {
@@ -50,7 +50,7 @@ object MainRepository{
 
                         if (!localDB.exist(recipe)) {
                             localDB.add(recipe)
-                            response.add(recipe)
+                            if(response.size < count){ response.add(recipe) }
                         }
                     }
                 }
