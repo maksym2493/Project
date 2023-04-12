@@ -19,10 +19,12 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val item = items[position]
+        //if(position >= 9 && position % 10 >= 5){ parent.getRecipes() }
+
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount(): Int{
         return items.size
     }
 
@@ -33,7 +35,7 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
 
                 var text = ""
                 item.ingredients.forEach{ text += it + ", " }
-                description.text = "Ingredients: " + text.dropLast(1)
+                description.text = "Ingredients: " + text.dropLast(2) + "."
 
                 parent.setImage(items.indexOf(item), image)
                 root.setOnClickListener(parent.Listener(items.indexOf(item)))

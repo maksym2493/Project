@@ -1,6 +1,7 @@
 package com.example.project.presentetion.main
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,8 +24,11 @@ class MainViewModel: ViewModel(){
     }
 
     fun getDrawable(view: ImageView, index: Int){
-        viewModelScope.launch {
-            image.postValue(mainUseCase.getDrawable(view, index))
+        viewModelScope.launch{
+            val i = mainUseCase.getDrawable(view, index)
+            //i.view.setImageDrawable(i.drawable)
+            image.postValue(i)
+            Log.d("MyLog", index.toString())
         }
     }
 
