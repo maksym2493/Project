@@ -8,8 +8,9 @@ import com.example.project.data.local.model.Recipe
 import com.example.project.databinding.RecyclerRowBinding
 
 class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList()): RecyclerView.Adapter<Adapter.Holder>(){
-    var count = 49
+    var count = 149
 
+    @Synchronized
     fun addItem(item: Recipe){
         items.add(item)
         notifyItemInserted(items.size - 1)
@@ -24,7 +25,7 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
         val size = items.size
         val item = items[position]
         if(position == size - 1){ count = position }
-        if(position == count){ count += 100; parent.getRecipes(200) }
+        if(position == count){ count += 200; parent.getRecipes(200) }
 
         holder.bind(item, position)
     }
