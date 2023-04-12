@@ -1,5 +1,7 @@
 package com.example.project.presentetion.main
 
+import android.graphics.drawable.Drawable
+import com.example.project.domain.main.model.Image
 import android.os.Bundle
 import android.text.Layout.Directions
 import android.util.Log
@@ -8,6 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,16 +37,19 @@ class MainFragment: Fragment(){
 
         viewModel.setFilesDir(requireContext().filesDir)
         viewModel.getRecipes()
+        viewModel.image.observe(viewLifecycleOwner){ it.view.setImageDrawable(it.drawable) }
         viewModel.recipes.observe(viewLifecycleOwner){ it.forEach{ Log.d("MyLog", it.title); adapter.addItem(it) } }
 
         return view
     }
 
+    fun setImage(index: Int, image: ImageView){
+        viewModel.getDrawable(image, index)
+    }
+
     inner class Listener(val index: Int): OnClickListener {
         override fun onClick(p0: View?){
-            val bundle = Bundle()
-            bundle.putInt("index", index)
-            findNavController().navigate(R.id.action_main_to_second, bundle)
+            findNavController().navigate(MainFragmentDirections.actionMainToSecond(index))
         }
     }
 }

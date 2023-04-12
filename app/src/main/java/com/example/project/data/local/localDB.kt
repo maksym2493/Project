@@ -1,9 +1,13 @@
 package com.example.project.data.local
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.project.data.local.model.Recipe
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 object localDB{
     var pos = 0
@@ -11,8 +15,9 @@ object localDB{
     private var recipes = ArrayList<Recipe>()
 
     private lateinit var file: File
+    private lateinit var filesDir: File
 
-    fun setFilesDir(filesDir: File){ file = File(filesDir, "LB") }
+    fun setFilesDir(filesDir: File){ file = File(filesDir, "LB"); this.filesDir = filesDir }
 
     @JvmName("getRecipes")
     fun getRecipes(): ArrayList<Recipe>{
@@ -27,6 +32,18 @@ object localDB{
 
     fun getRecipe(index: Int): Recipe{
         return recipes[index]
+    }
+
+    fun getDrawable(index: Int): Drawable?{
+        var drawable: Drawable? = null
+        val file = File(filesDir, index.toString())
+        if(file.exists()){ drawable = Drawable.createFromPath(file.path) }
+
+        return drawable
+    }
+
+    fun getFile(index: Int): File{
+        return File(filesDir, index.toString())
     }
 
     fun add(recipe: Recipe){ recipes.add(recipe); save() }

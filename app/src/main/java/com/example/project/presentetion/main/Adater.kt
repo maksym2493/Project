@@ -3,14 +3,13 @@ package com.example.project.presentetion.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.project.data.local.model.Recipe
 import com.example.project.databinding.RecyclerRowBinding
 
 class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList()): RecyclerView.Adapter<Adapter.Holder>(){
     fun addItem(item: Recipe){
         items.add(item)
-        notifyItemInserted(items.size)
+        notifyItemInserted(items.size - 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -36,10 +35,7 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
                 item.ingredients.forEach{ text += it + ", " }
                 description.text = "Ingredients: " + text.dropLast(1)
 
-                Glide.with(root)
-                    .load(item.image)
-                    .into(image)
-
+                parent.setImage(items.indexOf(item), image)
                 root.setOnClickListener(parent.Listener(items.indexOf(item)))
             }
         }
