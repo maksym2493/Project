@@ -30,16 +30,16 @@ class MainFragment: Fragment(){
         adapter = Adapter(this)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        val recycleView = view.findViewById<RecyclerView>(R.id.recycler_view)
-
-        recycleView.adapter =  adapter
-        recycleView.layoutManager = LinearLayoutManager(context)
-
         viewModel.setFilesDir(requireContext().filesDir)
-        viewModel.getRecipes()
         viewModel.image.observe(viewLifecycleOwner){ it.view.setImageDrawable(it.drawable) }
         viewModel.recipes.observe(viewLifecycleOwner){ it.forEach{ Log.d("MyLog", it.title); adapter.addItem(it) } }
 
+        val recycleView = view.findViewById<RecyclerView>(R.id.recycler_view)
+
+        recycleView.adapter = adapter
+        recycleView.layoutManager = LinearLayoutManager(context)
+
+        viewModel.getRecipes()
         return view
     }
 
@@ -49,7 +49,7 @@ class MainFragment: Fragment(){
 
     inner class Listener(val index: Int): OnClickListener {
         override fun onClick(p0: View?){
-            findNavController().navigate(MainFragmentDirections.actionMainToSecond(index))
+            try{ findNavController().navigate(MainFragmentDirections.actionMainToSecond(index)) } catch(_: java.lang.Exception){}
         }
     }
 }

@@ -24,8 +24,7 @@ class MainViewModel: ViewModel(){
 
     fun getDrawable(view: ImageView, index: Int){
         viewModelScope.launch {
-            val value = mainUseCase.getDrawable(view, index)
-            image.postValue(value)
+            image.postValue(mainUseCase.getDrawable(view, index))
         }
     }
 
