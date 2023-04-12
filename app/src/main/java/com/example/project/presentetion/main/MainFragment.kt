@@ -24,6 +24,7 @@ import java.io.File
 class MainFragment: Fragment(){
     private lateinit var adapter: Adapter
     private lateinit var viewModel: MainViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -41,21 +42,38 @@ class MainFragment: Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
-        viewModel.recipes.observe(viewLifecycleOwner){ it.forEach{ adapter.addItem(it) } }
-        viewModel.image.observe(viewLifecycleOwner){ Log.d("MyLog", "123"); it.view.setImageDrawable(it.drawable) }
+        viewModel.image.observe(viewLifecycleOwner){ it.view.setImageDrawable(it.drawable) }
+        viewModel.recipes.observe(viewLifecycleOwner){ it.forEach{ adapter.addItem(it) }; viewModel.isLoading.postValue(false) }
 
-        val recycleView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        viewModel.isLoading.observe(viewLifecycleOwner){
+            val loading = view.findViewById<ImageView>(R.id.loading)
+            val viewLoading = view.findViewById<View>(R.id.viewLoading)
 
-        recycleView.adapter = adapter
-        recycleView.layoutManager = LinearLayoutManager(context)
+            if(it){
+                viewLoading.visibility = View.VISIBLE
+                loading.visibility = ImageView.VISIBLE
+                recyclerView.visibility = RecyclerView.GONE
+            } else{
+                viewLoading.visibility = View.GONE
+                loading.visibility = ImageView.GONE
+                recyclerView.visibility = RecyclerView.VISIBLE
+            }
+        }
 
-        if(adapter.itemCount == 0){ getRecipes() }
+        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+
+        recyclerView.stopScroll()
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        if(adapter.itemCount == 0){ viewModel.getRecipes() }
 
         return view
     }
 
-    fun getRecipes(){
-        viewModel.getRecipes()
+    fun getRecipes(count: Int){
+        viewModel.getRecipes(count)
     }
 
     fun setImage(index: Int, image: ImageView){

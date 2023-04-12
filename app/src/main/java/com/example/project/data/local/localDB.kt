@@ -19,13 +19,13 @@ object localDB{
     fun setFilesDir(filesDir: File){ this.filesDir = filesDir }
 
     @JvmName("getRecipes")
-    fun getRecipes(): ArrayList<Recipe>{
+    fun getRecipes(c: Int): ArrayList<Recipe>{
         if(!loaded){ load(); loaded = true }
 
         var count = 0
         val size = recipes.size
         var response = ArrayList<Recipe>()
-        while(pos < size && count < 10){ response.add(recipes[pos]); pos++; count++ }
+        while(pos < size && count < c){ response.add(recipes[pos]); pos++; count++ }
 
         return response
     }
@@ -46,7 +46,7 @@ object localDB{
         return File(filesDir, index.toString())
     }
 
-    fun add(recipe: Recipe){ recipes.add(recipe); save() }
+    fun add(recipe: Recipe){ recipes.add(recipe) }
 
     fun exist(recipe: Recipe): Boolean{ return recipe in recipes }
 
@@ -58,6 +58,7 @@ object localDB{
                 val recipe = it.split("\r")
                 val ingredients = ArrayList<String>()
 
+                Log.d("MyLog", recipe[0])
                 recipe[3].split(",").forEach{ ingredients.add(it) }
                 recipes.add(Recipe(recipe[0], recipe[1], recipe[2], ingredients))
             }
@@ -69,11 +70,6 @@ object localDB{
         recipes.forEach{
             var ingredients = ""
             it.ingredients.forEach{ ingredients += it + "," }
-
-            Log.d("MyLog", "Title: " + it.title.length.toString())
-            Log.d("MyLog", "Instructions: " + it.instructions.length.toString())
-            Log.d("MyLog", "Image: " + it.image.length.toString())
-            Log.d("MyLog", "Ingredients: " + ingredients.length.toString() + "\n")
 
             text += "\r\r" + it.title + "\r" + it.instructions + "\r" + it.image + "\r" + ingredients.dropLast(1)
         }

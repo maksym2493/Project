@@ -11,8 +11,8 @@ import java.io.File
 object MainUseCase{
     private val repo = MainRepository
 
-    suspend fun getRecipes(): List<Recipe>{
-        return repo.getRecipes()
+    suspend fun getRecipes(count: Int): List<Recipe>{
+        return repo.getRecipes(count)
     }
 
     suspend fun getDrawable(view: ImageView, index: Int): Image{

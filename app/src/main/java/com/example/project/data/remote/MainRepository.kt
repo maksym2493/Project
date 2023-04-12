@@ -27,34 +27,37 @@ interface Downloader{
 object MainRepository{
     private val apiInterface = RetrofitClient.getInstance("https://api.spoonacular.com").create(ApiInterface::class.java)
 
-    suspend fun getRecipes(): List<Recipe>{
+    suspend fun getRecipes(count: Int): List<Recipe>{
         var times = 0
-        var response = localDB.getRecipes()
-        while(response.size < 10 && times++ != 5){
-            var recipes = apiInterface.getRecipes(10 - response.size).body()!!.recipes
+        var response = localDB.getRecipes(count)
+        while(response.size < count && times++ != 5){
+            try {
+                var recipes = apiInterface.getRecipes(count - response.size).body()!!.recipes
 
-            recipes.forEach{
-                if(it.image != null){
-                    val ingredients = ArrayList<String>()
-                    it.ingredients.forEach{ ingredients.add(it.name) }
+                recipes.forEach {
+                    if (it.image != null && it.instructions != "") {
+                        val ingredients = ArrayList<String>()
+                        it.ingredients.forEach { ingredients.add(it.name) }
 
-                    Log.d("MyLog", it.image)
+                        Log.d("MyLog", it.image)
 
-                    val recipe = Recipe(
-                        it.title,
-                        it.instructions,
-                        it.image,
-                        ingredients
-                    )
+                        val recipe = Recipe(
+                            it.title,
+                            it.instructions,
+                            it.image,
+                            ingredients
+                        )
 
-                    if(!localDB.exist(recipe)){
-                        localDB.add(recipe)
-                        response.add(recipe)
+                        if (!localDB.exist(recipe)) {
+                            localDB.add(recipe)
+                            response.add(recipe)
+                        }
                     }
                 }
-            }
+            } catch(e: Exception){ Log.d("MyLog", e.toString()) }
         }
 
+        localDB.save()
         return response
     }
 
