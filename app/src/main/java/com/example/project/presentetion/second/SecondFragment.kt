@@ -14,12 +14,19 @@ import com.example.project.databinding.FragmentSecondBinding
 
 class SecondFragment: Fragment(){
     private lateinit var viewModel: SecondViewModel
+    private lateinit var binding: FragmentSecondBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
-        viewModel = ViewModelProvider(this).get(SecondViewModel::class.java)
+        binding = FragmentSecondBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val args: SecondFragmentArgs by navArgs()
-        val binding = FragmentSecondBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(SecondViewModel::class.java)
 
         viewModel.getRecipe(args.index)
         viewModel.recipe.observe(viewLifecycleOwner){
@@ -35,7 +42,5 @@ class SecondFragment: Fragment(){
                 instructions.text = it.instructions
             }
         }
-
-        return binding.root
     }
 }
