@@ -28,7 +28,7 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
 
     override fun onBindViewHolder(holder: Holder, position: Int){
         val item = items[position]
-        if(position == nextPos){ getRecipes(200) }
+        if(position >= nextPos - if(nextPos >= 199){ 100 } else{ 0 }){ getRecipes(200) }
 
         holder.bind(item, position)
     }
