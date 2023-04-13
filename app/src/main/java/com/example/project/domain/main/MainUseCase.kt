@@ -25,5 +25,7 @@ object MainUseCase{
         return "Ingredients: " + text.dropLast(2) + "."
     }
 
+    fun resetLocalPos(){ localDB.resetLocalPos() }
+
     fun setFilesDir(filesDir: File){ localDB.setFilesDir(filesDir) }
 }

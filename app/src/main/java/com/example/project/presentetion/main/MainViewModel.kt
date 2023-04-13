@@ -28,5 +28,7 @@ class MainViewModel: ViewModel(){
         }
     }
 
+    fun resetLocalPos(){ mainUseCase.resetLocalPos() }
+
     fun setFilesDir(filesDir: File){ mainUseCase.setFilesDir(filesDir) }
 }

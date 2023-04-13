@@ -78,4 +78,6 @@ object localDB{
             }
         }
     }
+
+    fun resetLocalPos(){ pos = 0 }
 }

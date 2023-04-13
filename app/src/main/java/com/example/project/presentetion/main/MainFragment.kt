@@ -26,21 +26,6 @@ class MainFragment : Fragment(){
     private var initialized = false
     private lateinit var view: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        adapter = Adapter(
-            { count: Int ->
-                viewModel.getRecipes(count)
-            },
-            { index: Int ->
-                try {
-                    findNavController().navigate(MainFragmentDirections.actionMainToSecond(index))
-                } catch (_: java.lang.Exception){}
-            }
-        )
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,10 +74,26 @@ class MainFragment : Fragment(){
             initialized = true
             recyclerView = view.findViewById(R.id.recycler_view)
 
+            adapter = Adapter(
+                { count: Int ->
+                    viewModel.getRecipes(count)
+                },
+                { index: Int ->
+                    try {
+                        findNavController().navigate(MainFragmentDirections.actionMainToSecond(index))
+                    } catch (_: java.lang.Exception){}
+                }
+            )
+
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(context)
 
-            if(adapter.items.isEmpty()){ Log.d("MyLog", "Request new Elements."); viewModel.getRecipes(200) }
+            viewModel.getRecipes(200)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.resetLocalPos()
     }
 }
