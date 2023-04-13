@@ -11,7 +11,7 @@ import com.example.project.domain.second.model.SecondRecipe
 object SecondUseCase{
     suspend fun getRecipe(index: Int): SecondRecipe {
         val recipe = localDB.getRecipe(index)
-        return SecondRecipe(recipe.title, MainRepository.getDrawable(index), get_instuctions(recipe.instructions), get_ingredients(recipe.ingredients))
+        return SecondRecipe(recipe.title, recipe.link, get_ingredients(recipe.ingredients), get_instuctions(recipe.instructions))
     }
 
     fun get_instuctions(instructions: String): String{

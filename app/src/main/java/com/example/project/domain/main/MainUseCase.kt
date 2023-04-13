@@ -13,7 +13,7 @@ object MainUseCase{
 
     suspend fun getRecipes(count: Int): ArrayList<MainRecipe>{
         var recipes = ArrayList<MainRecipe>()
-        repo.getRecipes(count).forEach{ recipes.add(MainRecipe(it.title, repo.getDrawable(recipe = it), get_ingredients(it.ingredients))) }
+        repo.getRecipes(count).forEach{ recipes.add(MainRecipe(it.title, it.link, get_ingredients(it.ingredients))) }
 
         return recipes
     }

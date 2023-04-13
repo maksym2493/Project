@@ -22,9 +22,10 @@ object localDB{
 
     fun setFilesDir(filesDir: File){ this.filesDir = filesDir }
 
-    @JvmName("getRecipes")
     fun getRecipes(c: Int): ArrayList<Recipe>{
         if(!loaded){ load(); loaded = true }
+
+        Log.d("MyLog", pos.toString())
 
         var count = 0
         val size = recipes.size
@@ -36,16 +37,6 @@ object localDB{
 
     fun getRecipe(index: Int): Recipe{
         return recipes[index]
-    }
-
-    fun getDrawable(index: Int? = null, recipe: Recipe? = null): Drawable?{
-        val file = File(filesDir, (if(index != null){ index } else{ recipes.indexOf(recipe!!) }).toString())
-
-        return if(file.exists()){ Drawable.createFromPath(file.path) } else{ null }
-    }
-
-    fun getFile(index: Int? = null, recipe: Recipe? = null): File{
-        return File(filesDir, (if(index != null){ index } else{ recipes.indexOf(recipe!!) }).toString())
     }
 
     fun add(recipe: Recipe, add: Int){ pos += add; recipes.add(recipe) }
@@ -75,7 +66,7 @@ object localDB{
                         var ingredients = ""
                         it.ingredients.forEach { ingredients += it + "," }
 
-                        text += "\r\r" + it.title + "\r" + it.instructions + "\r" + it.image + "\r" + ingredients.dropLast(
+                        text += "\r\r" + it.title + "\r" + it.instructions + "\r" + it.link + "\r" + ingredients.dropLast(
                             1
                         )
                     }

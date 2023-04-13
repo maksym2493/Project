@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.project.R
 import com.example.project.databinding.FragmentSecondBinding
 
@@ -22,12 +23,13 @@ class SecondFragment: Fragment(){
 
         viewModel.getRecipe(args.index)
         viewModel.recipe.observe(viewLifecycleOwner){
-            Log.d("MyLog", "Recived")
             with(binding){
                 title.text = it.title
 
-                if(it.drawable != null){ image.setImageDrawable(it.drawable) }
-                else{ image.setImageResource(R.drawable.progress_cat) }
+                Glide.with(root)
+                    .load(it.link)
+                    .error(R.drawable.progress_cat)
+                    .into(image)
 
                 ingredients.text = it.ingredients
                 instructions.text = it.instructions

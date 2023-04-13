@@ -16,8 +16,8 @@ import java.io.File
 class MainViewModel: ViewModel(){
     val mainUseCase = MainUseCase
 
-    val isLoading = MutableLiveData<Boolean>()
-    val recipes = MutableLiveData<ArrayList<MainRecipe>>()
+    val isLoading = MutableLiveData<Boolean?>()
+    val recipes = MutableLiveData<ArrayList<MainRecipe>?>()
 
     fun getRecipes(count: Int = 200){
         viewModelScope.launch{

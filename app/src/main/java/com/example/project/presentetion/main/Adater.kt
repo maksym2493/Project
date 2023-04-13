@@ -3,6 +3,7 @@ package com.example.project.presentetion.main
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -14,9 +15,11 @@ import com.example.project.databinding.RecyclerRowBinding
 import com.example.project.domain.main.model.MainRecipe
 
 class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): RecyclerView.Adapter<Adapter.Holder>(){
+    var nextPos = -1
     var items: ArrayList<MainRecipe> = ArrayList()
 
     fun addItem(item: MainRecipe){
+        nextPos++
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
@@ -28,7 +31,8 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
 
     override fun onBindViewHolder(holder: Holder, position: Int){
         val item = items[position]
-        if(position == items.size - 1){ getRecipes(200) }
+        Log.d("MyLog", "Pos: " + position.toString())
+        if(position == nextPos){ Log.d("MyLog", "Request new items"); getRecipes(200) }
 
         holder.bind(item, position)
     }
@@ -42,12 +46,24 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
             with(itemBinding){
                 title.text = (index + 1).toString() + ". " + item.title
 
-                if(item.drawable != null){ image.setImageDrawable(item.drawable) }
-                else{ image.setImageResource(R.drawable.progress_cat) }
+                Log.d("MyLog", items.size.toString())
+                Log.d("MyLog", nextPos.toString())
+
+                Glide.with(root)
+                    .load(item.link)
+                    .placeholder(R.drawable.progress_cat)
+                    .error(R.drawable.progress_cat)
+                    .into(image)
 
                 description.text = item.ingredients
-                root.setOnClickListener{ listener(index) }
+                root.setOnClickListener(Listener(index))
             }
+        }
+    }
+
+    inner class Listener(val index: Int): OnClickListener{
+        override fun onClick(p0: View?) {
+            listener(index)
         }
     }
 }
