@@ -7,6 +7,7 @@ import com.example.project.data.local.model.Recipe
 import com.example.project.data.remote.model.ApiInterface
 import com.example.project.data.remote.model.Recipes
 import com.example.project.data.remote.model.RetrofitClient
+import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
@@ -46,7 +47,7 @@ object MainRepository{
                         }
                     }
                 }
-            } catch(e: Exception){ Log.d("MyLog", e.toString()) }
+            } catch(e: Exception){ times--; delay(1000) }
         }
 
         if(oldSize != response.size){ localDB.save() }

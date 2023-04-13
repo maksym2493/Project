@@ -47,7 +47,6 @@ class MainFragment : Fragment(){
 
         viewModel.recipes.observe(viewLifecycleOwner){
             if(it != null){
-                Log.d("MyLog", "Add new elements: " + it.size.toString())
                 it.forEach{ adapter.addItem(it) }
                 viewModel.isLoading.postValue(false)
             }
@@ -55,18 +54,10 @@ class MainFragment : Fragment(){
 
         viewModel.isLoading.observe(viewLifecycleOwner){
             if(it != null){
-                val viewLoading = view.findViewById<View>(R.id.viewLoading)
                 val progressCat = view.findViewById<ImageView>(R.id.loading)
+                progressCat.visibility = if(it){ ImageView.VISIBLE } else{ ImageView.GONE }
 
-                if(it) {
-                    viewLoading.visibility = View.VISIBLE
-                    progressCat.visibility = ImageView.VISIBLE
-                    recyclerView.visibility = RecyclerView.GONE
-                } else {
-                    viewLoading.visibility = View.GONE
-                    progressCat.visibility = ImageView.GONE
-                    recyclerView.visibility = RecyclerView.VISIBLE
-                }
+                if(progressCat.drawable == null){ Glide.with(view).load(R.drawable.progress_cat).into(progressCat) }
             }
         }
 
