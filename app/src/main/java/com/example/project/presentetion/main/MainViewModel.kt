@@ -22,9 +22,7 @@ class MainViewModel: ViewModel(){
     fun getRecipes(count: Int = 200){
         viewModelScope.launch{
             isLoading.postValue(true)
-
-            val r = mainUseCase.getRecipes(count)
-            recipes.postValue(r)
+            recipes.postValue(mainUseCase.getRecipes(count))
         }
     }
 

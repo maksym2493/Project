@@ -12,11 +12,9 @@ import com.example.project.databinding.RecyclerRowBinding
 import com.example.project.domain.main.model.MainRecipe
 
 class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): RecyclerView.Adapter<Adapter.Holder>(){
-    var nextPos = -1
     var items: ArrayList<MainRecipe> = ArrayList()
 
     fun addItem(item: MainRecipe){
-        nextPos++
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
@@ -28,7 +26,7 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
 
     override fun onBindViewHolder(holder: Holder, position: Int){
         val item = items[position]
-        if(position >= nextPos - if(nextPos >= 199){ 100 } else{ 0 }){ getRecipes(200) }
+        if(position == items.size - 1){ getRecipes(200) }
 
         holder.bind(item, position)
     }
