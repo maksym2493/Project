@@ -18,6 +18,7 @@ class SecondFragment: Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         binding = FragmentSecondBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(SecondViewModel::class.java)
 
         return binding.root
     }
@@ -26,8 +27,7 @@ class SecondFragment: Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         val args: SecondFragmentArgs by navArgs()
-        viewModel = ViewModelProvider(this).get(SecondViewModel::class.java)
-
+        
         viewModel.getRecipe(args.index)
         viewModel.recipe.observe(viewLifecycleOwner){
             with(binding){
