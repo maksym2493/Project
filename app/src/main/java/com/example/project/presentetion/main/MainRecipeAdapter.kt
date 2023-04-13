@@ -28,8 +28,7 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
 
     override fun onBindViewHolder(holder: Holder, position: Int){
         val item = items[position]
-        Log.d("MyLog", "Pos: " + position.toString())
-        if(position == nextPos){ Log.d("MyLog", "Request new items"); getRecipes(200) }
+        if(position == nextPos){ getRecipes(200) }
 
         holder.bind(item, position)
     }
@@ -42,9 +41,6 @@ class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): Recyc
         fun bind(item: MainRecipe, index: Int){
             with(itemBinding){
                 title.text = (index + 1).toString() + ". " + item.title
-
-                Log.d("MyLog", items.size.toString())
-                Log.d("MyLog", nextPos.toString())
 
                 Glide.with(root)
                     .load(item.link)

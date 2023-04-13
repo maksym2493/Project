@@ -25,8 +25,6 @@ object localDB{
     fun getRecipes(c: Int): ArrayList<Recipe>{
         if(!loaded){ load(); loaded = true }
 
-        Log.d("MyLog", pos.toString())
-
         var count = 0
         val size = recipes.size
         var response = ArrayList<Recipe>()
