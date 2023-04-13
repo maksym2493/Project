@@ -38,19 +38,17 @@ object localDB{
         return recipes[index]
     }
 
-    fun getDrawable(index: Int): Drawable?{
-        var drawable: Drawable? = null
-        val file = File(filesDir, index.toString())
-        if(file.exists()){ drawable = Drawable.createFromPath(file.path) }
+    fun getDrawable(index: Int? = null, recipe: Recipe? = null): Drawable?{
+        val file = File(filesDir, (if(index != null){ index } else{ recipes.indexOf(recipe!!) }).toString())
 
-        return drawable
+        return if(file.exists()){ Drawable.createFromPath(file.path) } else{ null }
     }
 
-    fun getFile(index: Int): File{
-        return File(filesDir, index.toString())
+    fun getFile(index: Int? = null, recipe: Recipe? = null): File{
+        return File(filesDir, (if(index != null){ index } else{ recipes.indexOf(recipe!!) }).toString())
     }
 
-    fun add(recipe: Recipe){ pos += 1; recipes.add(recipe) }
+    fun add(recipe: Recipe, add: Int){ pos += add; recipes.add(recipe) }
 
     fun exist(recipe: Recipe): Boolean{ return recipe in recipes }
 

@@ -8,16 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project.data.local.model.Recipe
 import com.example.project.domain.main.MainUseCase
-import com.example.project.domain.main.model.Image
+import com.example.project.domain.main.model.MainRecipe
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
 class MainViewModel: ViewModel(){
     val mainUseCase = MainUseCase
-    val image = MutableLiveData<Image>()
+
     val isLoading = MutableLiveData<Boolean>()
-    val recipes = MutableLiveData<ArrayList<Array<String>>>()
+    val recipes = MutableLiveData<ArrayList<MainRecipe>>()
 
     fun getRecipes(count: Int = 200){
         viewModelScope.launch{
@@ -25,14 +25,6 @@ class MainViewModel: ViewModel(){
 
             val r = mainUseCase.getRecipes(count)
             recipes.postValue(r)
-        }
-    }
-
-    fun getDrawable(view: ImageView, index: Int){
-        viewModelScope.launch{
-            val i = mainUseCase.getDrawable(view, index)
-            //i.view.setImageDrawable(i.drawable)
-            image.postValue(i)
         }
     }
 

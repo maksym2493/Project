@@ -1,18 +1,22 @@
 package com.example.project.presentetion.main
 
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.project.R
 import com.example.project.data.local.model.Recipe
 import com.example.project.databinding.RecyclerRowBinding
+import com.example.project.domain.main.model.MainRecipe
 
-class Adapter(val parent: MainFragment, var items: ArrayList<Array<String>> = ArrayList()): RecyclerView.Adapter<Adapter.Holder>(){
-    var count = 99
+class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): RecyclerView.Adapter<Adapter.Holder>(){
+    var items: ArrayList<MainRecipe> = ArrayList()
 
-    fun addItem(item: Array<String>){
+    fun addItem(item: MainRecipe){
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
@@ -23,12 +27,8 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Array<String>> = Ar
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int){
-        val size = items.size
         val item = items[position]
-        if(position == size - 1){ count = position }
-        if(position == count){ count += 200; parent.getRecipes(200) }
-
-        Log.d("MyLog", position.toString())
+        if(position == items.size - 1){ getRecipes(200) }
 
         holder.bind(item, position)
     }
@@ -38,14 +38,15 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Array<String>> = Ar
     }
 
     inner class Holder(private val itemBinding: RecyclerRowBinding): RecyclerView.ViewHolder(itemBinding.root){
-        fun bind(item: Array<String>, index: Int){
+        fun bind(item: MainRecipe, index: Int){
             with(itemBinding){
-                title.text = (index + 1).toString() + ". " + item[0]
+                title.text = (index + 1).toString() + ". " + item.title
 
-                description.text = item[1]
+                if(item.drawable != null){ image.setImageDrawable(item.drawable) }
+                else{ image.setImageResource(R.drawable.progress_cat) }
 
-                parent.setImage(index, image)
-                root.setOnClickListener(parent.Listener(index))
+                description.text = item.ingredients
+                root.setOnClickListener{ listener(index) }
             }
         }
     }

@@ -6,16 +6,12 @@ import com.example.project.data.local.localDB
 import com.example.project.data.local.model.Recipe
 import com.example.project.data.remote.MainRepository
 import com.example.project.data.remote.model.Ingredients
+import com.example.project.domain.second.model.SecondRecipe
 
 object SecondUseCase{
-    fun getRecipe(index: Int): Array<String>{
+    suspend fun getRecipe(index: Int): SecondRecipe {
         val recipe = localDB.getRecipe(index)
-
-        return arrayOf(recipe.title, get_instuctions(recipe.instructions), recipe.image, get_ingredients(recipe.ingredients))
-    }
-
-    suspend fun getDrawable(index: Int): Drawable?{
-        return MainRepository.getDrawable(index)
+        return SecondRecipe(recipe.title, MainRepository.getDrawable(index), get_instuctions(recipe.instructions), get_ingredients(recipe.ingredients))
     }
 
     fun get_instuctions(instructions: String): String{

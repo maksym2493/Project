@@ -5,21 +5,17 @@ import android.widget.ImageView
 import com.example.project.data.local.localDB
 import com.example.project.data.local.model.Recipe
 import com.example.project.data.remote.MainRepository
-import com.example.project.domain.main.model.Image
+import com.example.project.domain.main.model.MainRecipe
 import java.io.File
 
 object MainUseCase{
     private val repo = MainRepository
 
-    suspend fun getRecipes(count: Int): ArrayList<Array<String>>{
-        var recipes = ArrayList<Array<String>>()
-        repo.getRecipes(count).forEach{ recipes.add(arrayOf(it.title, get_ingredients(it.ingredients))) }
+    suspend fun getRecipes(count: Int): ArrayList<MainRecipe>{
+        var recipes = ArrayList<MainRecipe>()
+        repo.getRecipes(count).forEach{ recipes.add(MainRecipe(it.title, repo.getDrawable(recipe = it), get_ingredients(it.ingredients))) }
 
         return recipes
-    }
-
-    suspend fun getDrawable(view: ImageView, index: Int): Image{
-        return Image(view, repo.getDrawable(index))
     }
 
     fun get_ingredients(ingredients: List<String>): String{

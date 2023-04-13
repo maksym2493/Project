@@ -7,22 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project.data.local.model.Recipe
 import com.example.project.domain.second.SecondUseCase
+import com.example.project.domain.second.model.SecondRecipe
 import kotlinx.coroutines.launch
 
 class SecondViewModel: ViewModel(){
     val secondUseCase = SecondUseCase
-    val image = MutableLiveData<Drawable?>()
-    val recipe = MutableLiveData<Array<String>>()
+
+    val recipe = MutableLiveData<SecondRecipe>()
 
     fun getRecipe(index: Int){
         viewModelScope.launch{
             recipe.postValue(secondUseCase.getRecipe(index))
-        }
-    }
-
-    fun getDrawable(index: Int){
-        viewModelScope.launch{
-            image.postValue(secondUseCase.getDrawable(index))
         }
     }
 }
