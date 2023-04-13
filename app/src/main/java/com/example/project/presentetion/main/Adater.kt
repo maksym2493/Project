@@ -4,14 +4,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.project.R
 import com.example.project.data.local.model.Recipe
 import com.example.project.databinding.RecyclerRowBinding
 
-class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList()): RecyclerView.Adapter<Adapter.Holder>(){
-    var count = 149
+class Adapter(val parent: MainFragment, var items: ArrayList<Array<String>> = ArrayList()): RecyclerView.Adapter<Adapter.Holder>(){
+    var count = 99
 
-    @Synchronized
-    fun addItem(item: Recipe){
+    fun addItem(item: Array<String>){
         items.add(item)
         notifyItemInserted(items.size - 1)
     }
@@ -27,6 +28,8 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
         if(position == size - 1){ count = position }
         if(position == count){ count += 200; parent.getRecipes(200) }
 
+        Log.d("MyLog", position.toString())
+
         holder.bind(item, position)
     }
 
@@ -35,13 +38,11 @@ class Adapter(val parent: MainFragment, var items: ArrayList<Recipe> = ArrayList
     }
 
     inner class Holder(private val itemBinding: RecyclerRowBinding): RecyclerView.ViewHolder(itemBinding.root){
-        fun bind(item: Recipe, index: Int){
+        fun bind(item: Array<String>, index: Int){
             with(itemBinding){
-                title.text = (index + 1).toString() + ". " + item.title
+                title.text = (index + 1).toString() + ". " + item[0]
 
-                var text = ""
-                item.ingredients.forEach{ text += it + ", " }
-                description.text = "Ingredients: " + text.dropLast(2) + "."
+                description.text = item[1]
 
                 parent.setImage(index, image)
                 root.setOnClickListener(parent.Listener(index))

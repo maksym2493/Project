@@ -29,17 +29,17 @@ object MainRepository{
 
     suspend fun getRecipes(count: Int): List<Recipe>{
         var times = 0
-        var response = localDB.getRecipes(count)
+
+        val response = localDB.getRecipes(count)
+        val oldSize = response.size
         while(response.size < count && times++ != 5){
             try {
-                var recipes = apiInterface.getRecipes(count).body()!!.recipes
+                val recipes = apiInterface.getRecipes(count).body()!!.recipes
 
-                recipes.forEach {
-                    if (it.image != null && it.instructions != "") {
+                recipes.forEach{
+                    if(it.image != null && it.instructions != ""){
                         val ingredients = ArrayList<String>()
-                        it.ingredients.forEach { ingredients.add(it.name) }
-
-                        Log.d("MyLog", it.image)
+                        it.ingredients.forEach{ ingredients.add(it.name) }
 
                         val recipe = Recipe(
                             it.title,
@@ -57,33 +57,38 @@ object MainRepository{
             } catch(e: Exception){ Log.d("MyLog", e.toString()) }
         }
 
-        localDB.save()
+        if(oldSize != response.size){ localDB.save() }
+
         return response
     }
 
     suspend fun getDrawable(index: Int): Drawable?{
         var drawable = localDB.getDrawable(index)
         if(drawable == null){
-            val url = localDB.getRecipe(index).image
-            val index_2 = url.lastIndexOf("/") + 1
+            try {
+                val url = localDB.getRecipe(index).image
+                val index_2 = url.lastIndexOf("/") + 1
 
-            val getUrl = url.substring(index_2)
-            val baseUrl = url.substring(0, index_2)
-            val downloader = RetrofitClient.getInstance(baseUrl).create(Downloader::class.java)
+                val getUrl = url.substring(index_2)
+                val baseUrl = url.substring(0, index_2)
+                val downloader = RetrofitClient.getInstance(baseUrl).create(Downloader::class.java)
 
-            val file = localDB.getFile(index)
-            val inputStream = downloader.getImage(getUrl).body()!!.byteStream()
+                val file = localDB.getFile(index)
+                val inputStream = downloader.getImage(getUrl).body()!!.byteStream()
 
-            file.outputStream().use{output ->
-                var length = 0
-                val buffer = ByteArray(1024)
+                file.outputStream().use { output ->
+                    var length = 0
+                    val buffer = ByteArray(1024)
 
-                while(inputStream.read(buffer).also{ length = it } != -1){ output.write(buffer, 0, length) }
+                    while (inputStream.read(buffer).also { length = it } != -1) {
+                        output.write(buffer, 0, length)
+                    }
 
-                output.flush()
-            }
+                    output.flush()
+                }
 
-            drawable = localDB.getDrawable(index)
+                drawable = localDB.getDrawable(index)
+            } catch(_: Exception){}
         }
 
         return drawable

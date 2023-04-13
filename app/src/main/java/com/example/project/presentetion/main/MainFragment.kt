@@ -18,6 +18,7 @@ import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.project.R
 import java.io.File
 
@@ -35,10 +36,6 @@ class MainFragment: Fragment(){
         viewModel.setFilesDir(requireContext().filesDir)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
@@ -46,21 +43,21 @@ class MainFragment: Fragment(){
         viewModel.recipes.observe(viewLifecycleOwner){ it.forEach{ adapter.addItem(it) }; viewModel.isLoading.postValue(false) }
 
         viewModel.isLoading.observe(viewLifecycleOwner){
-            val loading = view.findViewById<ImageView>(R.id.loading)
             val viewLoading = view.findViewById<View>(R.id.viewLoading)
+            val progressCat = view.findViewById<ImageView>(R.id.loading)
 
             if(it){
                 viewLoading.visibility = View.VISIBLE
-                loading.visibility = ImageView.VISIBLE
+                progressCat.visibility = ImageView.VISIBLE
                 recyclerView.visibility = RecyclerView.GONE
             } else{
                 viewLoading.visibility = View.GONE
-                loading.visibility = ImageView.GONE
+                progressCat.visibility = ImageView.GONE
                 recyclerView.visibility = RecyclerView.VISIBLE
             }
         }
 
-        recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView = view.findViewById(R.id.recycler_view)
 
         recyclerView.stopScroll()
 

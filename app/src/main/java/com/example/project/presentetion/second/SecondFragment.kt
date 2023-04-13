@@ -28,7 +28,8 @@ class SecondFragment: Fragment(){
                     image.setImageDrawable(it)
                 }
 
-                description.text = "Ingredients: " + it[3] + "\n\nInstruction: " + it[1]
+                ingredients.text = it[3]
+                instructions.text = it[1]
             }
         }
 

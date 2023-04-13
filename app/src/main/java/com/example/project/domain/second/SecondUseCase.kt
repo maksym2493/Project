@@ -19,16 +19,20 @@ object SecondUseCase{
     }
 
     fun get_instuctions(instructions: String): String{
-        return instructions
-            .replace("<p>", "")
-            .replace("</p>", "")
-            .replace("\n", "\n\n")
+        var instructions = instructions
+        val firstOldValues = arrayOf("\n", "</li>", "</p>")
+        val secondOldValues = arrayOf("<li>", "<ol>", "</ol>", "<strong>", "</strong>", "<p>")
+
+        secondOldValues.forEach{ instructions = instructions.replace(it, "") }
+        firstOldValues.forEach{ instructions = instructions.replace(it, "\n\n") }
+
+        return instructions.trimEnd('\n')
     }
 
     fun get_ingredients(ingredients: List<String>): String{
         var text = ""
         ingredients.forEach{ text += it + ", " }
 
-        return text.dropLast(2) + "."
+        return text[0].uppercase() + text.substring(1).dropLast(2) + "."
     }
 }

@@ -5,6 +5,10 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.project.data.local.model.Recipe
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -46,19 +50,18 @@ object localDB{
         return File(filesDir, index.toString())
     }
 
-    fun add(recipe: Recipe){ recipes.add(recipe) }
+    fun add(recipe: Recipe){ pos += 1; recipes.add(recipe) }
 
     fun exist(recipe: Recipe): Boolean{ return recipe in recipes }
 
     fun load(){
+        Log.d("MyLog", "Loaded.")
         val file = File(filesDir, "DB")
         if(file.exists()){
-            Log.d("MyLog", "Size: " + file.readText().split("\r\r").size.toString())
             file.readText().split("\r\r").forEach{
                 val recipe = it.split("\r")
                 val ingredients = ArrayList<String>()
 
-                Log.d("MyLog", recipe[0])
                 recipe[3].split(",").forEach{ ingredients.add(it) }
                 recipes.add(Recipe(recipe[0], recipe[1], recipe[2], ingredients))
             }
@@ -66,15 +69,24 @@ object localDB{
     }
 
     fun save(){
-        var text = ""
-        recipes.forEach{
-            var ingredients = ""
-            it.ingredients.forEach{ ingredients += it + "," }
+        CoroutineScope(Dispatchers.IO).launch{
+            while(true) {
+                try {
+                    var text = ""
+                    recipes.forEach {
+                        var ingredients = ""
+                        it.ingredients.forEach { ingredients += it + "," }
 
-            text += "\r\r" + it.title + "\r" + it.instructions + "\r" + it.image + "\r" + ingredients.dropLast(1)
+                        text += "\r\r" + it.title + "\r" + it.instructions + "\r" + it.image + "\r" + ingredients.dropLast(
+                            1
+                        )
+                    }
+
+                    File(filesDir, "DB").writeText(text.substring(2))
+
+                    break
+                } catch (_: Exception){}
+            }
         }
-
-        File("/storage/emulated/0/log.txt").writeText(text.substring(2))
-        File(filesDir, "DB").writeText(text.substring(2))
     }
 }

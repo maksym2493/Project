@@ -11,12 +11,22 @@ import java.io.File
 object MainUseCase{
     private val repo = MainRepository
 
-    suspend fun getRecipes(count: Int): List<Recipe>{
-        return repo.getRecipes(count)
+    suspend fun getRecipes(count: Int): ArrayList<Array<String>>{
+        var recipes = ArrayList<Array<String>>()
+        repo.getRecipes(count).forEach{ recipes.add(arrayOf(it.title, get_ingredients(it.ingredients))) }
+
+        return recipes
     }
 
     suspend fun getDrawable(view: ImageView, index: Int): Image{
-        return Image(view, MainRepository.getDrawable(index))
+        return Image(view, repo.getDrawable(index))
+    }
+
+    fun get_ingredients(ingredients: List<String>): String{
+        var text = ""
+        ingredients.forEach{ text += it + ", " }
+
+        return "Ingredients: " + text.dropLast(2) + "."
     }
 
     fun setFilesDir(filesDir: File){ localDB.setFilesDir(filesDir) }

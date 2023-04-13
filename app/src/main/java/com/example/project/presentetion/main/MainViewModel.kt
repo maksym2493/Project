@@ -17,12 +17,14 @@ class MainViewModel: ViewModel(){
     val mainUseCase = MainUseCase
     val image = MutableLiveData<Image>()
     val isLoading = MutableLiveData<Boolean>()
-    val recipes = MutableLiveData<List<Recipe>>()
+    val recipes = MutableLiveData<ArrayList<Array<String>>>()
 
     fun getRecipes(count: Int = 200){
         viewModelScope.launch{
             isLoading.postValue(true)
-            recipes.postValue(mainUseCase.getRecipes(count))
+
+            val r = mainUseCase.getRecipes(count)
+            recipes.postValue(r)
         }
     }
 
@@ -31,7 +33,6 @@ class MainViewModel: ViewModel(){
             val i = mainUseCase.getDrawable(view, index)
             //i.view.setImageDrawable(i.drawable)
             image.postValue(i)
-            Log.d("MyLog", index.toString())
         }
     }
 
