@@ -16,11 +16,18 @@ object SecondUseCase{
 
     fun get_instuctions(instructions: String): String{
         var instructions = instructions
-        val firstOldValues = arrayOf("\n", "</li>", "</p>")
-        val secondOldValues = arrayOf("<li>", "<ol>", "</ol>", "<strong>", "</strong>", "<p>")
+        val firstOldValues = arrayOf("\n", "</li>", "</p>", "<br>")
+        val secondOldValues = arrayOf("<li>", "<ol>", "</ol>", "<strong>", "</strong>", "<p>", "<i>", "</i>", "<b>", "</b>")
 
         secondOldValues.forEach{ instructions = instructions.replace(it, "") }
         firstOldValues.forEach{ instructions = instructions.replace(it, "\n\n") }
+
+        while(true){
+            val oldString = instructions
+            instructions = instructions.replace("\n\n\n", "\n\n")
+
+            if(oldString == instructions){ break }
+        }
 
         return instructions.trimEnd('\n')
     }

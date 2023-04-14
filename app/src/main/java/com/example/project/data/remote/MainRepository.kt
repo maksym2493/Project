@@ -23,7 +23,7 @@ object MainRepository{
 
         val response = localDB.getRecipes(count)
         val oldSize = response.size
-        while(response.size < count && times++ != 5){
+        while(response.size == 0 && times++ != 5){
             try {
                 val recipes = apiInterface.getRecipes(count).body()!!.recipes
 

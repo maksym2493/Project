@@ -42,7 +42,6 @@ object localDB{
     fun exist(recipe: Recipe): Boolean{ return recipe in recipes }
 
     fun load(){
-        Log.d("MyLog", "Loaded.")
         val file = File(filesDir, "DB")
         if(file.exists()){
             file.readText().split("\r\r").forEach{
@@ -72,7 +71,7 @@ object localDB{
                     File(filesDir, "DB").writeText(text.substring(2))
 
                     break
-                } catch (_: Exception){}
+                } catch(_: Exception){}
             }
         }
     }
