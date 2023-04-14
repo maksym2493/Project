@@ -1,6 +1,5 @@
 package com.example.project.presentetion.main
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -11,7 +10,7 @@ import com.example.project.R
 import com.example.project.databinding.RecyclerRowBinding
 import com.example.project.domain.main.model.MainRecipe
 
-class Adapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): RecyclerView.Adapter<Adapter.Holder>(){
+class MainRecipeAdapter(val getRecipes: (Int) -> Unit, val listener: (Int) -> Unit): RecyclerView.Adapter<MainRecipeAdapter.Holder>(){
     var items: ArrayList<MainRecipe> = ArrayList()
 
     fun addItem(item: MainRecipe){

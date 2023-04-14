@@ -1,13 +1,9 @@
 package com.example.project.presentetion.main
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.Layout.Directions
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.*
@@ -16,11 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.project.R
-import java.io.File
 
 class MainFragment : Fragment(){
-    private lateinit var adapter: Adapter
     private lateinit var viewModel: MainViewModel
+    private lateinit var adapter: MainRecipeAdapter
     private lateinit var recyclerView: RecyclerView
 
     private var initialized = false
@@ -65,7 +60,7 @@ class MainFragment : Fragment(){
             initialized = true
             recyclerView = view.findViewById(R.id.recycler_view)
 
-            adapter = Adapter(
+            adapter = MainRecipeAdapter(
                 { count: Int ->
                     viewModel.getRecipes(count)
                 },
